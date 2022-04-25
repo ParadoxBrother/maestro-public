@@ -40,7 +40,14 @@ class Attack:
         
         # -------------------- TODO ------------------ #
 
-        # Write your attack function here
+        # get gradient with repect to target labels
+        original_images.requires_grad = True
+        data_grad = self.vm.get_batch_input_gradient(original_images, target_labels)
+        sign_data_grad = data_grad.sign()
+
+        # perturb image
+        perturbed_image = original_images - 0.079*sign_data_grad
+        perturbed_image = torch.clamp(perturbed_image, self.min_val, self.max_val)
 
         # ------------------ END TODO ---------------- #
 
