@@ -28,6 +28,7 @@ class Attack:
         self.attack_path = attack_path
         self.min_val = 0
         self.max_val = 1
+        self.eps = 0.0768
 
     def attack(
         self, original_images: np.ndarray, labels: List[int], target_label = None,
@@ -46,7 +47,7 @@ class Attack:
         sign_data_grad = data_grad.sign()
 
         # perturb image
-        perturbed_image = original_images - 0.079*sign_data_grad
+        perturbed_image = original_images - self.eps*sign_data_grad
         perturbed_image = torch.clamp(perturbed_image, self.min_val, self.max_val)
 
         # ------------------ END TODO ---------------- #
