@@ -42,13 +42,26 @@ class Attack:
         # -------------------- TODO ------------------ #
 
         # get gradient with repect to target labels
-        original_images.requires_grad = True
-        data_grad = self.vm.get_batch_input_gradient(original_images, target_labels)
-        sign_data_grad = data_grad.sign()
+        for i in range(2):
+          #original_images.requires_grad = True
+          #perturbed_image.requires_grad = True
+          data_grad = self.vm.get_batch_input_gradient(original_images, target_labels)
+          sign_data_grad = data_grad.sign()
 
         # perturb image
-        perturbed_image = original_images - self.eps*sign_data_grad
-        perturbed_image = torch.clamp(perturbed_image, self.min_val, self.max_val)
+          perturbed_image = original_images - self.eps*sign_data_grad
+          perturbed_image = torch.clamp(perturbed_image, self.min_val, self.max_val)
+
+          original_images = perturbed_image
+          original_images = original_images.detach()
+          #original_images = original_images.to(self.device)
+          #original_images = torch.unsqueeze(original_images, 0)
+
+
+        #for i in range(0):
+        #  original_images = perturbed_image
+        #  perturbed_image = original_images - self.eps*sign_data_grad
+        #  perturbed_image = torch.clamp(perturbed_image, self.min_val, self.max_val)
 
         # ------------------ END TODO ---------------- #
 
