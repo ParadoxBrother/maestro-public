@@ -28,7 +28,7 @@ class Attack:
         self.attack_path = attack_path
         self.min_val = 0
         self.max_val = 1
-        self.eps = 0.0768
+        self.eps = 0.006
 
     def attack(
         self, original_images: np.ndarray, labels: List[int], target_label = None,
@@ -42,9 +42,7 @@ class Attack:
         # -------------------- TODO ------------------ #
 
         # get gradient with repect to target labels
-        for i in range(2):
-          #original_images.requires_grad = True
-          #perturbed_image.requires_grad = True
+        for i in range(9):
           data_grad = self.vm.get_batch_input_gradient(original_images, target_labels)
           sign_data_grad = data_grad.sign()
 
@@ -54,14 +52,6 @@ class Attack:
 
           original_images = perturbed_image
           original_images = original_images.detach()
-          #original_images = original_images.to(self.device)
-          #original_images = torch.unsqueeze(original_images, 0)
-
-
-        #for i in range(0):
-        #  original_images = perturbed_image
-        #  perturbed_image = original_images - self.eps*sign_data_grad
-        #  perturbed_image = torch.clamp(perturbed_image, self.min_val, self.max_val)
 
         # ------------------ END TODO ---------------- #
 
