@@ -42,7 +42,7 @@ class Attack:
         # -------------------- TODO ------------------ #
 
         # get gradient with repect to target labels
-        for i in range(9):
+        for i in range(50):
           data_grad = self.vm.get_batch_input_gradient(original_images, target_labels)
           sign_data_grad = data_grad.sign()
 
@@ -52,6 +52,13 @@ class Attack:
 
           original_images = perturbed_image
           original_images = original_images.detach()
+
+          adv_outputs = self.vm.get_batch_output(perturbed_image)
+          final_pred = adv_outputs.max(1, keepdim=True)[1]
+          correct = 0
+          correct += (final_pred == target_labels).sum().item()
+          if(correct==1):
+            break
 
         # ------------------ END TODO ---------------- #
 
